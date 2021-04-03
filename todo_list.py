@@ -12,31 +12,37 @@ def add():
 
 
 def delete():
-    item = values['items'][0]
-    todo.remove(item)
-    with open('list.txt', 'r') as f2:
-        lines = f2.readlines()
-    with open('list.txt', 'w') as f:
-        for line in lines:
-            if not (line.startswith(str(item))):
-                f.write(line)
-    window.FindElement('items').Update(values=todo)
-    remove_empty_lines()
+    try:
+        item = values['items'][0]
+        todo.remove(item)
+        with open('list.txt', 'r') as f2:
+            lines = f2.readlines()
+        with open('list.txt', 'w') as f:
+            for line in lines:
+                if not line.startswith(str(item)):
+                    f.write(line)
+        window.FindElement('items').Update(values=todo)
+        remove_empty_lines()
+    except:
+        sg.popup("Oops", "You should select and then click Delete button")
 
 
 def edit():
-    item = values['items'][0]
-    todo.remove(item)
-    window.FindElement('items').Update(values=todo)
-    window.FindElement('do').Update(item)
-    window.FindElement('add_save').Update("save")
-    with open('list.txt', 'r') as f2:
-        lines = f2.readlines()
-    with open('list.txt', 'w') as f:
-        for line in lines:
-            if not (line.startswith(str(item))):
-                f.write(line)
-    remove_empty_lines()
+    try:
+        item = values['items'][0]
+        todo.remove(item)
+        window.FindElement('items').Update(values=todo)
+        window.FindElement('do').Update(item)
+        window.FindElement('add_save').Update("save")
+        with open('list.txt', 'r') as f2:
+            lines = f2.readlines()
+        with open('list.txt', 'w') as f:
+            for line in lines:
+                if not (line.startswith(str(item))):
+                    f.write(line)
+        remove_empty_lines()
+    except:
+        sg.popup("Oops", "You should select and then click edit")
 
 
 def remove_empty_lines():
@@ -72,10 +78,14 @@ while True:
     if event == sg.WINDOW_CLOSED:
         remove_empty_lines()
         break
-    if event == 'add_save':
-        add()
+    elif event == 'add_save':
+        if values['do'] == "":
+            sg.Popup('Input Box', 'Cannot be empty')
+            continue
+        else:
+            add()
     elif event == 'delete':
         delete()
-        remove_empty_lines()
+
     elif event == 'edit':
         edit()
