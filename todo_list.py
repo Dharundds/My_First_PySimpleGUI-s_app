@@ -8,6 +8,7 @@ def add():
     with open('list.txt', 'a') as f1:
         f1.writelines('\n'+item)
     window.FindElement('do').Update("")
+    window.FindElement('add_save').Update("Add")
 
 
 def delete():
@@ -20,6 +21,7 @@ def delete():
             if not (line.startswith(str(item))):
                 f.write(line)
     window.FindElement('items').Update(values=todo)
+    remove_empty_lines()
 
 
 def edit():
@@ -28,13 +30,13 @@ def edit():
     window.FindElement('items').Update(values=todo)
     window.FindElement('do').Update(item)
     window.FindElement('add_save').Update("save")
-    if event == "add_save":
-        window.FindElement('add_save').Update("Add")
     with open('list.txt', 'r') as f2:
         lines = f2.readlines()
     with open('list.txt', 'w') as f:
         for line in lines:
-            f.write(line)
+            if not (line.startswith(str(item))):
+                f.write(line)
+    remove_empty_lines()
 
 
 def remove_empty_lines():
@@ -45,8 +47,8 @@ def remove_empty_lines():
         non_empty = [line for line in lines if line.strip() != ""]
         a = ""
         for line in non_empty:
-            a += line+'\n'
-        f4.write(a)
+            a += line
+        f4.write(a+'\n')
 
 
 todo = []
